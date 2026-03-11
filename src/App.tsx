@@ -1,9 +1,21 @@
+import { PatientForm } from "./components/PatientForm"
+import { PatientsList } from "./components/PatientsList"
 
 function App() {
 
   return (
     <>
-      <h1 className="text-5xl font-bold">Pacientes</h1>
+    <div className="container mx-auto mt-20">
+      <h1 className="font-black text-5xl text-center md:mx-auto">Seguimiento de pacientes
+        {' '}
+        <span className="text-indigo-700">Veterinaria</span>
+      </h1>
+
+      <div className="mt-12 md:flex">
+        <PatientForm />
+        <PatientsList />
+      </div>
+    </div>
     </>
   )
 }
