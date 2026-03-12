@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 type PatientState = {
   patients: Patient[] // * Forma de arreglo, porque van a ser varios PACIENTES
   addPatient: (data: DraftPatient) => void
+  deletePatient: (id: Patient['id']) => void
 }
 
 const createPatient = (patient: DraftPatient) : Patient => {
@@ -22,6 +23,13 @@ export const usePatientStore = create<PatientState>((set) => ({ // ! usePatientS
     set((state) => ({ // * Callback -> () => | Similar al return en useReducer en las Acciones
       patients: [...state.patients, newPatient] // * Setteamos o Midificamos el STATE en Zustand equiv al return {...state}
     }))
-    console.log(data)
+    // console.log(data)
+  },
+
+  deletePatient: (id) => {
+    // console.log(id)
+    set((state) => ({
+      patients: state.patients.filter((patient) => patient.id !== id)
+    }))
   }
 }))
