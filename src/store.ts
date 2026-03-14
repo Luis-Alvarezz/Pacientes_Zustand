@@ -2,20 +2,25 @@
 import { create } from "zustand"
 import type { DraftPatient, Patient } from "./types"
 import { v4 as uuidv4 } from 'uuid'
+import { devtools } from "zustand/middleware"
 
 type PatientState = {
   patients: Patient[] // * Forma de arreglo, porque van a ser varios PACIENTES
   addPatient: (data: DraftPatient) => void
   deletePatient: (id: Patient['id']) => void
+  activeId: Patient['id']
+  updatePatient: (id: Patient['id']) => void
 }
 
 const createPatient = (patient: DraftPatient) : Patient => {
   return { ...patient, id: uuidv4() }
 }
 
-export const usePatientStore = create<PatientState>((set) => ({ // ! usePatientStore -> equivalente a crear el Custom Hook en useReducer
+export const usePatientStore = create<PatientState>()(devtools((set) => ({ // ! usePatientStore -> equivalente a crear el Custom Hook en useReducer
   // * colocamos STATE y Funciones que MOdifican el STATE
   patients: [], // ! STATE
+  activeId: '',
+
   // ! Metodos: 
   addPatient: (data) => {
     // console.log(data)
@@ -31,5 +36,13 @@ export const usePatientStore = create<PatientState>((set) => ({ // ! usePatientS
     set((state) => ({
       patients: state.patients.filter((patient) => patient.id !== id)
     }))
+  },
+
+  updatePatient: (id : string) => {
+    console.log('Actualizando...', id)
+    set(() => ({
+      activeId: id
+      // patients: state.patients.map( patient => patient.id === id ? patient : [] )
+    }))
   }
-}))
+})))
