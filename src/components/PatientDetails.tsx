@@ -11,7 +11,7 @@ type PatientDetailsProp = {
 
 // export default function PatientDetails({}){}
 export const PatientDetails = ({ patient }: PatientDetailsProp) => {
-  const { deletePatient, updatePatient } = usePatientStore()
+  const { deletePatient, updatePatientById } = usePatientStore()
   // usePatientStore(state => state.deletePatient)
   return (
     <div className="mx-5 my-10 px-5 py-10 bg-white shadow-md rounded-xl">
@@ -46,7 +46,7 @@ export const PatientDetails = ({ patient }: PatientDetailsProp) => {
       />
 
       <div className="flex flex-col gap-4 md:flex-row justify-between items-center mt-10">
-        <button className="py-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold uppercase rounded-lg" onClick={() => updatePatient(patient.id)}>
+        <button className="py-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold uppercase rounded-lg" onClick={() => updatePatientById(patient.id)}>
           Editar
         </button>
 
