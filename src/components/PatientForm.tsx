@@ -6,7 +6,7 @@ import { usePatientStore } from '../store'
 import { useEffect } from 'react'
 
 export const PatientForm = () => {
-  const { addPatient, activeId, patients } = usePatientStore() // * Forma 1 de extraer STATE y Funciones
+  const { addPatient, activeId, patients, updatePatientData } = usePatientStore() // * Forma 1 de extraer STATE y Funciones
   // const addPatient = usePatientStore((state) => state.addPatient) // * Forma 2 de extraer STATE y Funciones
 
   const {register, handleSubmit, formState: { errors }, reset, setValue } = useForm<DraftPatient>()
@@ -16,7 +16,11 @@ export const PatientForm = () => {
     // console.log('Nuevo Paciente...');
     // console.log(data);
     // * Almacenar los pacientes con Zustand (Estado Global)
-    addPatient(data) // * Se manda informacion al STORE de Zustand
+    if (activeId) {
+      updatePatientData(data)
+    } else {
+      addPatient(data) // * Se manda informacion al STORE de Zustand
+    }
 
     // * Reiniciar el Formulario
     reset()
@@ -43,7 +47,6 @@ export const PatientForm = () => {
         <span className="text-indigo-600 font-bold">Administralos</span>
       </p>
 
-      { activeId && (
         <form action="" className="bg-white shadow-md rounded-lg py-10 px-5 mb-10" onSubmit={handleSubmit(registerPatient)}>
           <div className="mb-5">
             <label htmlFor="name" className="text-sm uppercase font-bold">
@@ -143,10 +146,9 @@ export const PatientForm = () => {
           <input
             type="submit"
             className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors"
-            value='Guardar Paciente'
+            value={activeId ? 'Editar Paciente' : 'Guardar Paciente'}
           />
         </form>
-      ) }
     </div>
   )
 }
