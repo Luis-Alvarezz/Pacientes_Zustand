@@ -9,7 +9,8 @@ type PatientState = {
   addPatient: (data: DraftPatient) => void
   deletePatient: (id: Patient['id']) => void
   activeId: Patient['id']
-  updatePatient: (id: Patient['id']) => void
+  updatePatientById: (id: Patient['id']) => void
+  updatePatientData: (data: DraftPatient) => void
 }
 
 const createPatient = (patient: DraftPatient) : Patient => {
@@ -38,11 +39,19 @@ export const usePatientStore = create<PatientState>()(devtools((set) => ({ // ! 
     }))
   },
 
-  updatePatient: (id : string) => {
+  updatePatientById: (id : string) => {
     console.log('Actualizando...', id)
     set(() => ({
       activeId: id
       // patients: state.patients.map( patient => patient.id === id ? patient : [] )
     }))
-  }
+  },
+
+  updatePatientData: (data) => {
+      set(( state ) => ({
+        // * Zustand permite escribir en multiples STATEs al mismo tiempo
+        patients: state.patients.map( patient => patient.id === state.activeId ? {id: state.activeId, ...data} : patient),
+        activeId: ''
+      }))
+    }
 })))
