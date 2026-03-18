@@ -2,7 +2,7 @@
 import { create } from "zustand"
 import type { DraftPatient, Patient } from "./types"
 import { v4 as uuidv4 } from 'uuid'
-import { devtools } from "zustand/middleware"
+import { createJSONStorage, devtools, persist } from "zustand/middleware"
 
 type PatientState = {
   patients: Patient[] // * Forma de arreglo, porque van a ser varios PACIENTES
@@ -13,12 +13,12 @@ type PatientState = {
   updatePatientData: (data: DraftPatient) => void
 }
 
-const createPatient = (patient: DraftPatient) : Patient => {
+const createPatient = (patient: DraftPatient): Patient => {
   return { ...patient, id: uuidv4() }
 }
 
-export const usePatientStore = create<PatientState>()(devtools((set) => ({ // ! usePatientStore -> equivalente a crear el Custom Hook en useReducer
-  // * colocamos STATE y Funciones que MOdifican el STATE
+export const usePatientStore = create<PatientState>()(devtools(persist((set) => ({ // ! usePatientStore -> equivalente a crear el Custom Hook en useReducer
+  // * colocamos STATE y Funciones que Modifican el STATE
   patients: [], // ! STATE
   activeId: '',
 
@@ -39,7 +39,7 @@ export const usePatientStore = create<PatientState>()(devtools((set) => ({ // ! 
     }))
   },
 
-  updatePatientById: (id : string) => {
+  updatePatientById: (id: string) => {
     console.log('Actualizando...', id)
     set(() => ({
       activeId: id
@@ -48,10 +48,15 @@ export const usePatientStore = create<PatientState>()(devtools((set) => ({ // ! 
   },
 
   updatePatientData: (data) => {
-      set(( state ) => ({
-        // * Zustand permite escribir en multiples STATEs al mismo tiempo
-        patients: state.patients.map( patient => patient.id === state.activeId ? {id: state.activeId, ...data} : patient),
-        activeId: ''
-      }))
-    }
-})))
+    set((state) => ({
+      // * Zustand permite escribir en multiples STATEs al mismo tiempo
+      patients: state.patients.map(patient => patient.id === state.activeId ? { id: state.activeId, ...data } : patient),
+      activeId: ''
+    }))
+  }
+}), {
+  name: 'patient-storage',
+  // storage: (() => sessionStorage)
+  storage: createJSONStorage(() => localStorage)
+})
+))
