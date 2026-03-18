@@ -4,6 +4,8 @@ import { Error } from './Error'
 import type { DraftPatient } from '../types'
 import { usePatientStore } from '../store'
 import { useEffect } from 'react'
+import { toast } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css"
 
 export const PatientForm = () => {
   const { addPatient, activeId, patients, updatePatientData } = usePatientStore() // * Forma 1 de extraer STATE y Funciones
@@ -18,8 +20,12 @@ export const PatientForm = () => {
     // * Almacenar los pacientes con Zustand (Estado Global)
     if (activeId) {
       updatePatientData(data)
+      toast('Paciente Editado Correctamente', {
+        type: 'success'
+      })
     } else {
       addPatient(data) // * Se manda informacion al STORE de Zustand
+      toast.success('Paciente Registrado Correctamente')
     }
 
     // * Reiniciar el Formulario
