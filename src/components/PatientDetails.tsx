@@ -4,6 +4,7 @@ import type { Patient } from "../types"
 import PatientDetailItem from "./PatientDetailItem"
 import { usePatientStore } from "../store"
 import { toast } from "react-toastify"
+import Swal from "sweetalert2"
 
 type PatientDetailsProp = {
   patient: Patient
@@ -16,10 +17,22 @@ export const PatientDetails = ({ patient }: PatientDetailsProp) => {
   // usePatientStore(state => state.deletePatient)
 
   const handleDelete = () => {
-    deletePatient(patient.id)
-    toast('Paciente Eliminado con Exito', {
-      type: 'error'
-    })
+    Swal.fire({
+      title: `¿Estás seguro de eliminar al Paciente ${patient.name}?`,
+      text: "No podrás recuperar la información",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deletePatient(patient.id)
+        toast('Paciente Eliminado con Exito', {
+          type: 'error'
+        })
+      }
+    });
   }
 
   return (
